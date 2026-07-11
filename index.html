@@ -1,549 +1,1329 @@
 <!DOCTYPE html>
 <html lang="ug">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Esra Izda</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Esra Izda - ئىزدەش</title>
     <style>
-        /* 全局重置 */
-        * {
+        /* ============================================================
+                   全局重置与基础样式
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #f4f6f9;
+            --surface: #ffffff;
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --border: #dadce0;
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --primary-light: #e8f0fe;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --radius: 16px;
+            --transition: 0.25s ease;
+            --font: 'Segoe UI', 'Arial', system-ui, -apple-system, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1e1e1e;
+            --surface: #2d2d2d;
+            --text: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --border: #4a4a4a;
+            --primary: #8ab4f8;
+            --primary-hover: #aec7f8;
+            --primary-light: #3c4043;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        html,
         body {
+            width: 100%;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            transition: background var(--transition), color var(--transition);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: #f4f6f9;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 16px;
         }
 
-        /* 主容器 */
-        .container {
+        /* ============================================================
+                   主容器
+                   ============================================================ */
+        .app {
+            width: 100%;
+            max-width: 600px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
-            max-width: 500px;
-            gap: 16px;
+            gap: 12px;
+            position: relative;
         }
 
-        /* 品牌名 */
+        /* ============================================================
+                   顶部栏：品牌 + 主题切换 + 语言
+                   ============================================================ */
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 4px;
+        }
+
         .brand {
-            font-size: 28px;
-            font-weight: 600;
-            color: #1a73e8;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary);
             direction: rtl;
+            letter-spacing: 0.5px;
         }
         .brand small {
             font-size: 16px;
             font-weight: 400;
-            color: #5f6368;
+            color: var(--text-secondary);
         }
 
-        /* 圆形搜索框 */
-        .circle-input {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 2px solid #dadce0;
-            background: #ffffff;
-            text-align: center;
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 20px;
-            padding: 0 20px;
+            cursor: pointer;
+            transition: background var(--transition), border var(--transition);
+            color: var(--text-secondary);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .icon-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+        .icon-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* ============================================================
+                   日期时间
+                   ============================================================ */
+        .datetime {
+            font-size: 14px;
+            color: var(--text-secondary);
+            direction: rtl;
+            text-align: center;
+            margin-bottom: 4px;
+            font-weight: 400;
+        }
+        .datetime span {
+            margin: 0 4px;
+        }
+
+        /* ============================================================
+                   圆形搜索框
+                   ============================================================ */
+        .search-wrapper {
+            position: relative;
+            margin: 8px 0 4px;
+        }
+
+        .circle-input {
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            text-align: center;
+            font-size: 22px;
+            padding: 0 24px;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            color: #202124;
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            color: var(--text);
             direction: rtl;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: var(--font);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         .circle-input:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(26, 115, 232, 0.15);
         }
         .circle-input::placeholder {
-            color: #9aa0a6;
-            font-size: 16px;
-            text-align: center;
+            color: var(--text-secondary);
+            font-size: 17px;
+            opacity: 0.7;
         }
 
-        /* 按钮行（搜索 + 图片切换） */
-        .action-row {
-            display: flex;
-            gap: 24px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .circle-btn {
-            width: 56px;
-            height: 56px;
+        /* 语音搜索按钮（位于圆形内部右下角） */
+        .voice-btn {
+            position: absolute;
+            bottom: 18px;
+            right: 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 50%;
-            border: none;
-            background: #1a73e8;
-            color: #fff;
-            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
+            transition: all var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--text-secondary);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+        .voice-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+        .voice-btn.listening {
+            background: #ea4335;
+            color: #fff;
+            border-color: #ea4335;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* ============================================================
+                   操作按钮行
+                   ============================================================ */
+        .action-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 8px 0 2px;
+        }
+
+        .circle-btn {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-size: 26px;
+            cursor: pointer;
+            transition: background var(--transition), transform 0.1s, box-shadow var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.25);
         }
         .circle-btn:hover {
-            background: #1557b0;
+            background: var(--primary-hover);
+            transform: scale(1.04);
         }
         .circle-btn:active {
             transform: scale(0.94);
         }
         .circle-btn.outline {
             background: transparent;
-            border: 2px solid #dadce0;
-            color: #5f6368;
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+            box-shadow: none;
         }
         .circle-btn.outline:hover {
-            background: #f1f3f4;
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
         }
-        .circle-btn.active {
-            background: #e8f0fe;
-            border-color: #1a73e8;
-            color: #1a73e8;
+        .circle-btn.outline.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
         }
 
-        /* 功能按钮（收藏 + 记录） */
+        /* 图片模式提示 */
+        .img-hint {
+            font-size: 13px;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 3px 16px;
+            border-radius: 30px;
+            display: none;
+            direction: rtl;
+            margin-top: -2px;
+        }
+        .img-hint.show {
+            display: inline-block;
+        }
+
+        /* ============================================================
+                   功能按钮（收藏、历史、设置）
+                   ============================================================ */
         .func-row {
             display: flex;
-            gap: 20px;
-            margin-top: 4px;
+            gap: 16px;
             flex-wrap: wrap;
             justify-content: center;
+            margin-top: 4px;
         }
         .func-btn {
             background: none;
             border: none;
-            font-size: 14px;
-            color: #5f6368;
+            font-size: 15px;
+            color: var(--text-secondary);
             cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 20px;
-            transition: background 0.2s;
+            padding: 6px 14px;
+            border-radius: 30px;
+            transition: background var(--transition), color var(--transition);
             direction: rtl;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            font-family: var(--font);
         }
         .func-btn:hover {
-            background: #e8eaed;
+            background: var(--primary-light);
+            color: var(--text);
         }
         .func-btn .badge {
-            background: #1a73e8;
+            background: var(--primary);
             color: #fff;
-            border-radius: 12px;
-            padding: 0 8px;
+            border-radius: 30px;
+            padding: 0 10px;
             font-size: 12px;
-            line-height: 18px;
+            line-height: 20px;
+            min-width: 20px;
+            text-align: center;
         }
 
-        /* 下拉面板（记录/收藏） */
+        /* ============================================================
+                   面板（收藏、历史、设置）
+                   ============================================================ */
         .panel {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            padding: 12px 16px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 16px 18px;
             width: 100%;
-            max-height: 200px;
+            max-height: 280px;
             overflow-y: auto;
             display: none;
             direction: rtl;
             text-align: right;
+            border: 1px solid var(--border);
+            transition: all var(--transition);
         }
         .panel.open {
             display: block;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 17px;
+            color: var(--text);
+        }
+        .panel-header .close-panel {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .panel-header .close-panel:hover {
+            color: var(--text);
         }
         .panel-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid #f1f3f4;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
             font-size: 15px;
-            color: #202124;
+            color: var(--text);
+            cursor: pointer;
         }
         .panel-item:last-child {
             border-bottom: none;
         }
-        .panel-item .del {
-            color: #d93025;
-            cursor: pointer;
-            font-size: 14px;
+        .panel-item .item-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-left: 8px;
+        }
+        .panel-item .item-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+        .panel-item .del-btn {
             background: none;
             border: none;
+            color: #d93025;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 6px;
         }
-        .panel-item .del:hover {
+        .panel-item .del-btn:hover {
             text-decoration: underline;
         }
         .panel-empty {
-            color: #9aa0a6;
+            color: var(--text-secondary);
             text-align: center;
-            padding: 16px 0;
-            font-size: 14px;
+            padding: 20px 0;
+            font-size: 15px;
         }
-        .panel-title {
-            font-weight: 600;
-            color: #202124;
-            margin-bottom: 8px;
-            font-size: 16px;
+        .panel-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .panel-actions button {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            font-family: var(--font);
+        }
+        .panel-actions button:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .panel-actions .danger {
+            color: #d93025;
+            border-color: #d93025;
+        }
+        .panel-actions .danger:hover {
+            background: #fce8e6;
         }
 
-        /* 图片搜索开关状态 */
-        .img-mode-hint {
-            font-size: 13px;
-            color: #1a73e8;
-            background: #e8f0fe;
-            padding: 2px 12px;
-            border-radius: 30px;
-            display: none;
+        /* 设置面板特殊样式 */
+        .setting-group {
+            margin-bottom: 14px;
+        }
+        .setting-group label {
+            display: block;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .setting-group select,
+        .setting-group input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            font-family: var(--font);
             direction: rtl;
         }
-        .img-mode-hint.show {
-            display: inline-block;
+        .setting-group select:focus,
+        .setting-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .setting-group .desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
         }
 
-        /* 移动端适配 */
+        /* ============================================================
+                   底部信息
+                   ============================================================ */
+        .footer {
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            direction: rtl;
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        /* ============================================================
+                   滚动条美化
+                   ============================================================ */
+        .panel::-webkit-scrollbar {
+            width: 5px;
+        }
+        .panel::-webkit-scrollbar-track {
+            background: var(--bg);
+            border-radius: 10px;
+        }
+        .panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        /* ============================================================
+                   响应式
+                   ============================================================ */
         @media (max-width: 480px) {
             .circle-input {
-                width: 140px;
-                height: 140px;
-                font-size: 16px;
+                width: 150px;
+                height: 150px;
+                font-size: 18px;
+                padding: 0 16px;
             }
             .circle-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 22px;
             }
             .brand {
                 font-size: 22px;
+            }
+            .brand small {
+                font-size: 14px;
+            }
+            .voice-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 16px;
+                bottom: 12px;
+                right: 12px;
+            }
+            .top-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            .datetime {
+                font-size: 12px;
+            }
+            .func-btn {
+                font-size: 13px;
+                padding: 4px 10px;
+            }
+            .panel {
+                max-height: 220px;
+                padding: 12px 14px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .circle-input {
+                width: 130px;
+                height: 130px;
+                font-size: 16px;
+            }
+            .circle-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- 品牌 -->
-    <div class="brand">Esra Izda <small>ئىزدەش</small></div>
+    <div class="app" id="app">
 
-    <!-- 圆形搜索框 -->
-    <input type="text" class="circle-input" id="searchInput" placeholder="ئىزدەش" dir="rtl" />
-
-    <!-- 操作按钮：搜索 + 图片切换 -->
-    <div class="action-row">
-        <button class="circle-btn" id="searchBtn" title="ئىزدەش">🔍</button>
-        <button class="circle-btn outline" id="imgToggleBtn" title="رەسىم ئىزدەش">🖼️</button>
-    </div>
-
-    <!-- 图片模式提示 -->
-    <div class="img-mode-hint" id="imgHint">🖼️ رەسىم ئىزدەش ھالىتى</div>
-
-    <!-- 功能按钮：收藏 + 搜索记录 -->
-    <div class="func-row">
-        <button class="func-btn" id="favBtn">⭐ <span id="favCount" class="badge">0</span></button>
-        <button class="func-btn" id="historyBtn">📋 <span id="historyCount" class="badge">0</span></button>
-    </div>
-
-    <!-- 面板：显示收藏或记录 -->
-    <div class="panel" id="panel">
-        <div class="panel-title" id="panelTitle">خاتىرە</div>
-        <div id="panelContent">
-            <div class="panel-empty">ھېچنېمە يوق</div>
+        <!-- ===== 顶部栏 ===== -->
+        <div class="top-bar">
+            <div class="brand">Esra Izda <small>ئىزدەش</small></div>
+            <div class="top-actions">
+                <button class="icon-btn" id="themeToggle" title="تېما ئالماشتۇرۇش">🌓</button>
+                <button class="icon-btn" id="langToggle" title="تىل ئالماشتۇرۇش">🌐</button>
+                <button class="icon-btn" id="settingsToggle" title="تەڭشەك">⚙️</button>
+            </div>
         </div>
+
+        <!-- ===== 日期时间 ===== -->
+        <div class="datetime" id="datetime" dir="rtl"></div>
+
+        <!-- ===== 圆形搜索框 ===== -->
+        <div class="search-wrapper">
+            <input type="text" class="circle-input" id="searchInput" placeholder="ئىزدەش" dir="rtl" autocomplete="off" />
+            <button class="voice-btn" id="voiceBtn" title="ئاۋازلىق ئىزدەش">🎤</button>
+        </div>
+
+        <!-- ===== 操作按钮 ===== -->
+        <div class="action-row">
+            <button class="circle-btn" id="searchBtn" title="ئىزدەش">🔍</button>
+            <button class="circle-btn outline" id="imgToggleBtn" title="رەسىم ئىزدەش">🖼️</button>
+        </div>
+
+        <!-- ===== 图片模式提示 ===== -->
+        <div class="img-hint" id="imgHint">🖼️ رەسىم ئىزدەش ھالىتى</div>
+
+        <!-- ===== 功能按钮 ===== -->
+        <div class="func-row">
+            <button class="func-btn" id="favBtn">⭐ <span class="badge" id="favCount">0</span></button>
+            <button class="func-btn" id="historyBtn">📋 <span class="badge" id="historyCount">0</span></button>
+            <button class="func-btn" id="exportBtn">📤 ئېكسپورت</button>
+            <button class="func-btn" id="importBtn">📥 ئىمپورت</button>
+        </div>
+
+        <!-- ===== 面板容器 ===== -->
+        <div class="panel" id="panel">
+            <div class="panel-header">
+                <span id="panelTitle">خاتىرە</span>
+                <button class="close-panel" id="closePanel">✕</button>
+            </div>
+            <div id="panelContent">
+                <div class="panel-empty">ھېچنېمە يوق</div>
+            </div>
+            <div class="panel-actions" id="panelActions">
+                <!-- 动态生成 -->
+            </div>
+        </div>
+
+        <!-- ===== 底部 ===== -->
+        <div class="footer">© 2026 Esra Izda · <span id="footerLang">ئۇيغۇرچە</span></div>
     </div>
-</div>
 
-<script>
-    (function() {
-        'use strict';
+    <script>
+        // ================================================================
+        // 完整 JavaScript – Esra Izda 搜索引擎
+        // 包含：数据管理、UI渲染、事件绑定、语音、主题、语言、导入导出
+        // ================================================================
 
-        // ----- DOM 元素 -----
-        const input = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const imgToggleBtn = document.getElementById('imgToggleBtn');
-        const imgHint = document.getElementById('imgHint');
-        const favBtn = document.getElementById('favBtn');
-        const historyBtn = document.getElementById('historyBtn');
-        const panel = document.getElementById('panel');
-        const panelTitle = document.getElementById('panelTitle');
-        const panelContent = document.getElementById('panelContent');
-        const favCountSpan = document.getElementById('favCount');
-        const historyCountSpan = document.getElementById('historyCount');
+        (function() {
+            'use strict';
 
-        // ----- 状态 -----
-        let isImageMode = false;          // 图片搜索模式
-        let currentPanelType = null;      // 'fav' 或 'history'
+            // ---------- DOM 引用 ----------
+            const input = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const imgToggleBtn = document.getElementById('imgToggleBtn');
+            const imgHint = document.getElementById('imgHint');
+            const favBtn = document.getElementById('favBtn');
+            const historyBtn = document.getElementById('historyBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const importBtn = document.getElementById('importBtn');
+            const panel = document.getElementById('panel');
+            const panelTitle = document.getElementById('panelTitle');
+            const panelContent = document.getElementById('panelContent');
+            const panelActions = document.getElementById('panelActions');
+            const closePanelBtn = document.getElementById('closePanel');
+            const themeToggle = document.getElementById('themeToggle');
+            const langToggle = document.getElementById('langToggle');
+            const settingsToggle = document.getElementById('settingsToggle');
+            const datetimeEl = document.getElementById('datetime');
+            const voiceBtn = document.getElementById('voiceBtn');
+            const favCountSpan = document.getElementById('favCount');
+            const historyCountSpan = document.getElementById('historyCount');
+            const footerLang = document.getElementById('footerLang');
 
-        // ----- 数据存储（localStorage）-----
-        function getFavs() {
-            try {
-                return JSON.parse(localStorage.getItem('esra_favs')) || [];
-            } catch { return []; }
-        }
-        function setFavs(arr) {
-            localStorage.setItem('esra_favs', JSON.stringify(arr));
-        }
-        function getHistory() {
-            try {
-                return JSON.parse(localStorage.getItem('esra_history')) || [];
-            } catch { return []; }
-        }
-        function setHistory(arr) {
-            localStorage.setItem('esra_history', JSON.stringify(arr));
-        }
+            // ---------- 状态 ----------
+            let isImageMode = false;
+            let currentPanelType = null; // 'fav' | 'history' | 'settings'
+            let currentLang = 'ug'; // 'ug' | 'zh' | 'en'
+            let listening = false;
+            let recognition = null;
 
-        // 添加搜索记录（去重，最多50条）
-        function addHistory(query) {
-            if (!query.trim()) return;
-            let hist = getHistory();
-            hist = hist.filter(item => item !== query);
-            hist.unshift(query);
-            if (hist.length > 50) hist = hist.slice(0, 50);
-            setHistory(hist);
-            updateBadges();
-        }
+            // ---------- 本地化文本 ----------
+            const L10N = {
+                ug: {
+                    placeholder: 'ئىزدەش',
+                    favTitle: '⭐ ياقتۇرغانلار',
+                    historyTitle: '📋 ئىزدەش خاتىرىسى',
+                    settingsTitle: '⚙️ تەڭشەك',
+                    empty: 'ھېچنېمە يوق',
+                    clearAll: 'ھەممىنى ئۆچۈر',
+                    export: '📤 ئېكسپورت قىلىش',
+                    import: '📥 ئىمپورت قىلىش',
+                    theme: 'تېما',
+                    light: 'يورۇق',
+                    dark: 'قاراڭغۇ',
+                    lang: 'تىل',
+                    engine: 'ئىزدەش ماتورى',
+                    engineDefault: 'SearXNG (تەۋسىيە)',
+                    engineBaidu: '百 度',
+                    engineGoogle: 'Google',
+                    save: 'ساقلاش',
+                    cancel: 'بېكارلاش',
+                    confirmClear: 'راستىنلا ھەممىنى ئۆچۈرەمسىز؟',
+                    importSuccess: 'ئىمپورت مۇۋەپپەقىيەتلىك!',
+                    importFail: 'ئىمپورت مەغلۇب بولدى',
+                    searchAlert: 'ئىزدەش سۆزىنى كىرگۈزۈڭ',
+                    favAdded: '⭐ ياقتۇرغانلارغا قوشۇلدى',
+                    favRemoved: '❌ ياقتۇرغانلاردىن چىقىرىلدى',
+                    voiceNotSupported: 'ئاۋازلىق ئىزدەش قوللىنىمايدۇ',
+                    voiceListening: 'ئاڭلاۋاتىدۇ...',
+                    footer: 'ئۇيغۇرچە',
+                },
+                zh: {
+                    placeholder: '搜索',
+                    favTitle: '⭐ 收藏',
+                    historyTitle: '📋 搜索记录',
+                    settingsTitle: '⚙️ 设置',
+                    empty: '暂无内容',
+                    clearAll: '清空全部',
+                    export: '📤 导出',
+                    import: '📥 导入',
+                    theme: '主题',
+                    light: '明亮',
+                    dark: '深色',
+                    lang: '语言',
+                    engine: '搜索引擎',
+                    engineDefault: 'SearXNG (推荐)',
+                    engineBaidu: '百度',
+                    engineGoogle: 'Google',
+                    save: '保存',
+                    cancel: '取消',
+                    confirmClear: '确定要清空全部吗？',
+                    importSuccess: '导入成功！',
+                    importFail: '导入失败',
+                    searchAlert: '请输入搜索词',
+                    favAdded: '⭐ 已添加到收藏',
+                    favRemoved: '❌ 已移除收藏',
+                    voiceNotSupported: '不支持语音搜索',
+                    voiceListening: '正在聆听...',
+                    footer: '中文',
+                },
+                en: {
+                    placeholder: 'Search',
+                    favTitle: '⭐ Favorites',
+                    historyTitle: '📋 Search History',
+                    settingsTitle: '⚙️ Settings',
+                    empty: 'Nothing here',
+                    clearAll: 'Clear All',
+                    export: '📤 Export',
+                    import: '📥 Import',
+                    theme: 'Theme',
+                    light: 'Light',
+                    dark: 'Dark',
+                    lang: 'Language',
+                    engine: 'Search Engine',
+                    engineDefault: 'SearXNG (recommended)',
+                    engineBaidu: 'Baidu',
+                    engineGoogle: 'Google',
+                    save: 'Save',
+                    cancel: 'Cancel',
+                    confirmClear: 'Are you sure to clear all?',
+                    importSuccess: 'Import successful!',
+                    importFail: 'Import failed',
+                    searchAlert: 'Please enter a search term',
+                    favAdded: '⭐ Added to favorites',
+                    favRemoved: '❌ Removed from favorites',
+                    voiceNotSupported: 'Voice search not supported',
+                    voiceListening: 'Listening...',
+                    footer: 'English',
+                }
+            };
 
-        // 切换收藏
-        function toggleFav(query) {
-            if (!query.trim()) return;
-            let favs = getFavs();
-            const idx = favs.indexOf(query);
-            if (idx > -1) {
-                favs.splice(idx, 1);
-            } else {
-                favs.unshift(query);
+            // ---------- 数据管理 ----------
+            function getFavs() {
+                try { return JSON.parse(localStorage.getItem('esra_favs')) || []; } catch { return []; }
             }
-            setFavs(favs);
-            updateBadges();
-            // 如果当前打开的是收藏面板，刷新显示
-            if (currentPanelType === 'fav') renderPanel('fav');
-        }
 
-        // 删除单项（收藏或记录）
-        function removeItem(type, query) {
-            if (type === 'fav') {
-                let favs = getFavs().filter(item => item !== query);
-                setFavs(favs);
-            } else if (type === 'history') {
-                let hist = getHistory().filter(item => item !== query);
+            function setFavs(arr) {
+                localStorage.setItem('esra_favs', JSON.stringify(arr));
+            }
+
+            function getHistory() {
+                try { return JSON.parse(localStorage.getItem('esra_history')) || []; } catch { return []; }
+            }
+
+            function setHistory(arr) {
+                localStorage.setItem('esra_history', JSON.stringify(arr));
+            }
+
+            function getSettings() {
+                try { return JSON.parse(localStorage.getItem('esra_settings')) || {}; } catch { return {}; }
+            }
+
+            function setSettings(obj) {
+                localStorage.setItem('esra_settings', JSON.stringify(obj));
+            }
+
+            // 添加历史（带时间戳）
+            function addHistory(query) {
+                if (!query.trim()) return;
+                let hist = getHistory();
+                // 移除重复
+                hist = hist.filter(item => item.query !== query);
+                hist.unshift({ query: query.trim(), time: Date.now() });
+                if (hist.length > 100) hist = hist.slice(0, 100);
                 setHistory(hist);
-            }
-            updateBadges();
-            if (currentPanelType === type) renderPanel(type);
-        }
-
-        // 清空（收藏或记录）
-        function clearAll(type) {
-            if (type === 'fav') {
-                setFavs([]);
-            } else if (type === 'history') {
-                setHistory([]);
-            }
-            updateBadges();
-            if (currentPanelType === type) renderPanel(type);
-        }
-
-        // 更新角标
-        function updateBadges() {
-            const favs = getFavs();
-            const hist = getHistory();
-            favCountSpan.textContent = favs.length;
-            historyCountSpan.textContent = hist.length;
-        }
-
-        // ----- 渲染面板 -----
-        function renderPanel(type) {
-            const data = type === 'fav' ? getFavs() : getHistory();
-            const title = type === 'fav' ? '⭐ ياقتۇرغانلار' : '📋 ئىزدەش خاتىرىسى';
-            panelTitle.textContent = title;
-            currentPanelType = type;
-
-            if (data.length === 0) {
-                panelContent.innerHTML = `<div class="panel-empty">ھېچنېمە يوق</div>`;
-                return;
+                updateBadges();
             }
 
-            let html = '';
-            // 添加“清除全部”按钮
-            html += `<div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                        <span></span>
-                        <button class="func-btn" style="color:#d93025; font-size:13px;" id="clearAllBtn">ھەممىنى ئۆچۈر</button>
-                    </div>`;
-            data.forEach((item, index) => {
-                html += `<div class="panel-item">
-                            <span>${escapeHtml(item)}</span>
-                            <div>
-                                <button class="del" data-type="${type}" data-value="${escapeHtml(item)}">✕</button>
-                            </div>
-                        </div>`;
-            });
-            panelContent.innerHTML = html;
+            // 切换收藏
+            function toggleFav(query) {
+                if (!query.trim()) return;
+                let favs = getFavs();
+                const idx = favs.indexOf(query);
+                if (idx > -1) {
+                    favs.splice(idx, 1);
+                    setFavs(favs);
+                    return false; // 移除
+                } else {
+                    favs.unshift(query);
+                    setFavs(favs);
+                    return true; // 添加
+                }
+            }
 
-            // 绑定删除事件
-            document.querySelectorAll('.panel-item .del').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const val = this.getAttribute('data-value');
-                    const t = this.getAttribute('data-type');
-                    removeItem(t, val);
+            // 更新角标
+            function updateBadges() {
+                const favs = getFavs();
+                const hist = getHistory();
+                favCountSpan.textContent = favs.length;
+                historyCountSpan.textContent = hist.length;
+            }
+
+            // ---------- 渲染面板 ----------
+            function renderPanel(type) {
+                const t = getTexts();
+                let data = [];
+                let title = '';
+                let actions = [];
+
+                if (type === 'fav') {
+                    data = getFavs();
+                    title = t.favTitle;
+                    actions = [{ label: t.clearAll, cls: 'danger', action: () => { if (confirm(t.confirmClear)) { setFavs(
+                                []); updateBadges();
+                            renderPanel('fav'); } } }];
+                } else if (type === 'history') {
+                    data = getHistory();
+                    title = t.historyTitle;
+                    actions = [{ label: t.clearAll, cls: 'danger', action: () => { if (confirm(t.confirmClear)) { setHistory(
+                                []); updateBadges();
+                            renderPanel('history'); } } }];
+                } else if (type === 'settings') {
+                    renderSettingsPanel();
+                    return;
+                } else {
+                    return;
+                }
+
+                panelTitle.textContent = title;
+                currentPanelType = type;
+                panel.classList.add('open');
+
+                if (data.length === 0) {
+                    panelContent.innerHTML = `<div class="panel-empty">${t.empty}</div>`;
+                } else {
+                    let html = '';
+                    data.forEach((item, index) => {
+                        let display = typeof item === 'string' ? item : item.query;
+                        let timeStr = '';
+                        if (typeof item !== 'string' && item.time) {
+                            const d = new Date(item.time);
+                            timeStr = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit',
+                                minute: '2-digit' });
+                        }
+                        html += `<div class="panel-item" data-value="${escapeHtml(display)}">
+                                    <span class="item-text">${escapeHtml(display)}</span>
+                                    ${timeStr ? `<span class="item-time">${timeStr}</span>` : ''}
+                                    <button class="del-btn" data-type="${type}" data-value="${escapeHtml(display)}">✕</button>
+                                </div>`;
+                    });
+                    panelContent.innerHTML = html;
+
+                    // 点击项目填充到搜索框
+                    document.querySelectorAll('.panel-item').forEach(el => {
+                        el.addEventListener('click', function(e) {
+                            if (e.target.classList.contains('del-btn')) return;
+                            const val = this.getAttribute('data-value');
+                            if (val) {
+                                input.value = val;
+                                closePanel();
+                                input.focus();
+                            }
+                        });
+                    });
+
+                    // 删除按钮
+                    document.querySelectorAll('.del-btn').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const val = this.getAttribute('data-value');
+                            const typ = this.getAttribute('data-type');
+                            if (typ === 'fav') {
+                                let favs = getFavs().filter(f => f !== val);
+                                setFavs(favs);
+                            } else if (typ === 'history') {
+                                let hist = getHistory().filter(h => (typeof h === 'string' ? h : h.query) !== val);
+                                setHistory(hist);
+                            }
+                            updateBadges();
+                            renderPanel(typ);
+                        });
+                    });
+                }
+
+                // 渲染操作按钮
+                let actionsHtml = '';
+                actions.forEach(a => {
+                    actionsHtml +=
+                        `<button class="${a.cls || ''}" data-action="${a.label}">${a.label}</button>`;
                 });
-            });
-
-            // 绑定清空事件
-            const clearBtn = document.getElementById('clearAllBtn');
-            if (clearBtn) {
-                clearBtn.addEventListener('click', function() {
-                    if (confirm('راستىنلا ھەممىنى ئۆچۈرەمسىز؟')) {
-                        clearAll(type);
+                panelActions.innerHTML = actionsHtml;
+                panelActions.querySelectorAll('button').forEach(btn => {
+                    const label = btn.textContent;
+                    const act = actions.find(a => a.label === label);
+                    if (act && act.action) {
+                        btn.addEventListener('click', act.action);
                     }
                 });
             }
-        }
 
-        // 简单防XSS
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+            // 设置面板
+            function renderSettingsPanel() {
+                const t = getTexts();
+                panelTitle.textContent = t.settingsTitle;
+                currentPanelType = 'settings';
+                panel.classList.add('open');
 
-        // 打开/关闭面板
-        function togglePanel(type) {
-            if (currentPanelType === type && panel.classList.contains('open')) {
-                panel.classList.remove('open');
-                currentPanelType = null;
-                return;
-            }
-            renderPanel(type);
-            panel.classList.add('open');
-        }
+                const settings = getSettings();
+                const theme = settings.theme || 'light';
+                const lang = settings.lang || 'ug';
+                const engine = settings.engine || 'searxng';
 
-        // 关闭面板（点击别处时）
-        function closePanel() {
-            panel.classList.remove('open');
-            currentPanelType = null;
-        }
+                let html = `
+                            <div class="setting-group">
+                                <label>${t.theme}</label>
+                                <select id="settingTheme">
+                                    <option value="light" ${theme==='light'?'selected':''}>${t.light}</option>
+                                    <option value="dark" ${theme==='dark'?'selected':''}>${t.dark}</option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label>${t.lang}</label>
+                                <select id="settingLang">
+                                    <option value="ug" ${lang==='ug'?'selected':''}>ئۇيغۇرچە</option>
+                                    <option value="zh" ${lang==='zh'?'selected':''}>中文</option>
+                                    <option value="en" ${lang==='en'?'selected':''}>English</option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label>${t.engine}</label>
+                                <select id="settingEngine">
+                                    <option value="searxng" ${engine==='searxng'?'selected':''}>${t.engineDefault}</option>
+                                    <option value="baidu" ${engine==='baidu'?'selected':''}>${t.engineBaidu}</option>
+                                    <option value="google" ${engine==='google'?'selected':''}>${t.engineGoogle}</option>
+                                </select>
+                                <div class="desc">${engine==='searxng'?'SearXNG 聚合70+引擎，支持维语': engine==='baidu'?'百度搜索，需手动添加语言参数':'Google 搜索，需代理'}</div>
+                            </div>
+                            <div class="panel-actions">
+                                <button id="saveSettings">${t.save}</button>
+                                <button id="cancelSettings" class="danger">${t.cancel}</button>
+                            </div>
+                        `;
+                panelContent.innerHTML = html;
 
-        // ----- 执行搜索 -----
-        function performSearch() {
-            const query = input.value.trim();
-            if (!query) {
-                alert('ئىزدەش سۆزىنى كىرگۈزۈڭ');
-                return;
-            }
-            // 保存记录
-            addHistory(query);
-
-            // 构建搜索URL（使用SearXNG公共实例）
-            const baseUrl = 'https://searx.be/search';
-            const params = new URLSearchParams();
-            params.set('q', query);
-            params.set('language', 'ug');  // 维吾尔语
-            if (isImageMode) {
-                params.set('categories', 'images');  // 图片分类
-            }
-            const url = baseUrl + '?' + params.toString();
-            window.open(url, '_blank');  // 新窗口打开
-        }
-
-        // ----- 事件绑定 -----
-        searchBtn.addEventListener('click', performSearch);
-        input.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                performSearch();
-            }
-        });
-
-        // 图片切换
-        imgToggleBtn.addEventListener('click', function() {
-            isImageMode = !isImageMode;
-            this.classList.toggle('active', isImageMode);
-            imgHint.classList.toggle('show', isImageMode);
-            // 修改按钮样式
-            if (isImageMode) {
-                this.classList.add('active');
-                this.style.borderColor = '#1a73e8';
-            } else {
-                this.classList.remove('active');
-                this.style.borderColor = '#dadce0';
-            }
-        });
-
-        // 收藏按钮：如果输入框有内容，则收藏/取消；否则显示收藏面板
-        favBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const query = input.value.trim();
-            if (query) {
-                toggleFav(query);
-                // 提示（简单用alert）
-                const favs = getFavs();
-                const isFav = favs.includes(query);
-                alert(isFav ? '⭐ ياقتۇرغانلارغا قوشۇلدى' : '❌ ياقتۇرغانلاردىن چىقىرىلدى');
-                return;
-            }
-            togglePanel('fav');
-        });
-
-        // 历史按钮
-        historyBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            togglePanel('history');
-        });
-
-        // 点击页面空白处关闭面板
-        document.addEventListener('click', function(e) {
-            if (!panel.contains(e.target) && e.target !== historyBtn && e.target !== favBtn) {
-                closePanel();
-            }
-        });
-
-        // 初始加载更新角标
-        updateBadges();
-
-        // 自动聚焦输入框
-        window.addEventListener('load', function() {
-            input.focus();
-        });
-
-        // 额外：如果用户点击了面板内的项目（搜索词），可以快速填入输入框
-        panelContent.addEventListener('click', function(e) {
-            const item = e.target.closest('.panel-item');
-            if (item) {
-                const textSpan = item.querySelector('span');
-                if (textSpan) {
-                    input.value = textSpan.textContent;
+                document.getElementById('saveSettings').addEventListener('click', function() {
+                    const newTheme = document.getElementById('settingTheme').value;
+                    const newLang = document.getElementById('settingLang').value;
+                    const newEngine = document.getElementById('settingEngine').value;
+                    const s = getSettings();
+                    s.theme = newTheme;
+                    s.lang = newLang;
+                    s.engine = newEngine;
+                    setSettings(s);
+                    // 应用
+                    applySettings(s);
                     closePanel();
-                    input.focus();
+                });
+
+                document.getElementById('cancelSettings').addEventListener('click', function() {
+                    closePanel();
+                });
+            }
+
+            // 应用设置
+            function applySettings(settings) {
+                if (settings.theme) {
+                    document.documentElement.setAttribute('data-theme', settings.theme);
+                }
+                if (settings.lang) {
+                    currentLang = settings.lang;
+                    updateUILanguage();
+                }
+                // 引擎存储在设置中，搜索时使用
+            }
+
+            // 获取当前语言文本
+            function getTexts() {
+                return L10N[currentLang] || L10N.ug;
+            }
+
+            // 更新界面语言（动态改变占位符、标题等）
+            function updateUILanguage() {
+                const t = getTexts();
+                input.placeholder = t.placeholder;
+                footerLang.textContent = t.footer;
+                // 如果面板打开，刷新
+                if (panel.classList.contains('open') && currentPanelType && currentPanelType !== 'settings') {
+                    renderPanel(currentPanelType);
+                } else if (panel.classList.contains('open') && currentPanelType === 'settings') {
+                    renderSettingsPanel();
+                }
+                // 更新日期格式语言（稍后）
+                updateDateTime();
+            }
+
+            // ---------- 日期时间 ----------
+            function updateDateTime() {
+                const now = new Date();
+                let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit',
+                    minute: '2-digit', second: '2-digit' };
+                let locale = 'ug-CN';
+                if (currentLang === 'zh') locale = 'zh-CN';
+                else if (currentLang === 'en') locale = 'en-US';
+                else locale = 'ug-CN';
+                try {
+                    const str = now.toLocaleString(locale, options);
+                    datetimeEl.textContent = '🕒 ' + str;
+                } catch (e) {
+                    datetimeEl.textContent = now.toLocaleString();
                 }
             }
-        });
 
-        // 按住Ctrl+Shift+I 快速切换图片模式（小彩蛋）
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-                e.preventDefault();
-                imgToggleBtn.click();
+            // ---------- 搜索功能 ----------
+            function performSearch() {
+                const query = input.value.trim();
+                if (!query) {
+                    alert(getTexts().searchAlert);
+                    return;
+                }
+                addHistory(query);
+
+                const settings = getSettings();
+                const engine = settings.engine || 'searxng';
+                let url = '';
+                const langParam = currentLang === 'ug' ? 'ug' : (currentLang === 'zh' ? 'zh' : 'en');
+
+                if (engine === 'searxng') {
+                    const base = 'https://searx.be/search';
+                    const params = new URLSearchParams();
+                    params.set('q', query);
+                    params.set('language', langParam);
+                    if (isImageMode) {
+                        params.set('categories', 'images');
+                    }
+                    url = base + '?' + params.toString();
+                } else if (engine === 'baidu') {
+                    // 百度搜索（简单跳转，不支持维语，但可以尝试添加参数）
+                    url = `https://www.baidu.com/s?wd=${encodeURIComponent(query)}&ie=utf-8`;
+                } else if (engine === 'google') {
+                    url =
+                    `https://www.google.com/search?q=${encodeURIComponent(query)}&hl=${langParam}`;
+                }
+
+                if (url) {
+                    window.open(url, '_blank');
+                } else {
+                    alert('ئىزدەش ماتورى تەڭشەلمىدى');
+                }
             }
-        });
 
-    })();
-</script>
+            // ---------- 语音搜索 ----------
+            function initVoice() {
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    voiceBtn.style.display = 'none';
+                    return;
+                }
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'ug-CN'; // 维吾尔语识别（可能不支持，可降级为zh-CN）
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.onresult = function(event) {
+                    const result = event.results[0][0].transcript;
+                    input.value = result;
+                    listening = false;
+                    voiceBtn.classList.remove('listening');
+                    // 自动搜索
+                    performSearch();
+                };
+
+                recognition.onerror = function(event) {
+                    listening = false;
+                    voiceBtn.classList.remove('listening');
+                    if (event.error !== 'aborted') {
+                        alert(getTexts().voiceNotSupported + ' (' + event.error + ')');
+                    }
+                };
+
+                recognition.onend = function() {
+                    listening = false;
+                    voiceBtn.classList.remove('listening');
+                };
+            }
+
+            function toggleVoice() {
+                if (!recognition) {
+                    alert(getTexts().voiceNotSupported);
+                    return;
+                }
+                if (listening) {
+                    recognition.abort();
+                    listening = false;
+                    voiceBtn.classList.remove('listening');
+                    return;
+                }
+                try {
+                    recognition.start();
+                    listening = true;
+                    voiceBtn.classList.add('listening');
+                    // 显示提示（短暂）
+                    const origPlaceholder = input.placeholder;
+                    input.placeholder = getTexts().voiceListening;
+                    setTimeout(() => {
+                        if (listening) input.placeholder = origPlaceholder;
+                    }, 3000);
+                } catch (e) {
+                    alert(getTexts().voiceNotSupported);
+                }
+            }
+
+            // ---------- 面板控制 ----------
+            function openPanel(type) {
+                if (panel.classList.contains('open') && currentPanelType === type) {
+                    closePanel();
+                    return;
+                }
+                renderPanel(type);
+            }
+
+            function closePanel() {
+                panel.classList.remove('open');
+                currentPanelType = null;
+            }
+
+            // ---------- 导入导出 ----------
+            function exportData() {
+                const data = {
+                    favs: getFavs(),
+                    history: getHistory(),
+                    settings: getSettings(),
+                    exportedAt: new Date().toISOString()
+                };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `esra_izda_backup_${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            function importData() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'application/json';
+                input.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        try {
+                            const data = JSON.parse(ev.target.result);
+                            if (data.favs) setFavs(data.favs);
+                            if (data.history) setHistory(data.history);
+                            if (data.settings) setSettings(data.settings);
+                            updateBadges();
+                            alert(getTexts().importSuccess);
+                            // 应用设置
+                            applySettings(getSettings());
+                        } catch (err) {
+                            alert(getTexts().importFail + ': ' + err.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                input.click();
+            }
+
+            // ---------- 主题切换 ----------
+            function toggleTheme() {
+                const current = document.documentElement.getAttribute('data-theme') || 'light';
+                const next = current === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', next);
+                const settings = getSettings();
+                settings.theme = next;
+                setSettings(settings);
+            }
+
+            // ---------- 语言切换（循环） ----------
+            function cycleLang() {
+                const langs = ['ug', 'zh', 'en'];
+                let idx = langs.indexOf(currentLang);
+                idx = (idx + 1) % langs.length;
+                currentLang = langs[idx];
+                const settings = getSettings();
+                settings.lang = currentLang;
+                setSettings(settings);
+                applySettings(settings);
+            }
+
+            // ---------- 工具函数 ----------
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // ---------- 初始化 ----------
+            function init() {
+                // 加载设置
+                const settings = getSettings();
+                if (settings.theme) {
+                    document.documentElement.setAttribute('data-theme', settings.theme);
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+                currentLang = settings.lang || 'ug';
+                applySettings(settings);
+
+                // 更新角标
+                updateBadges();
+
+                // 日期时间
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+
+                // 语音
+                initVoice();
+
+                // 事件绑定
+                searchBtn.addEventListener('click', performSearch);
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        performSearch();
+                    }
+                    // Ctrl+Enter 直接搜索（无需焦点）
+                    if (e.ctrlKey && e.key === 'Enter') {
+                        e.preventDefault();
+                        performSearch();
+                    }
+                });
+
+                // 图片切换
+                imgToggleBtn.addEventListener('click', function() {
+                    isImageMode = !isImageMode;
+                    this.classList.toggle('active', isImageMode);
+                    imgHint.classList.toggle('show', isImageMode);
+                });
+
+                // 收藏
+                favBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const query = input.value.trim();
+                    if (query) {
+                        const added = toggleFav(query);
+                        updateBadges();
+                        const t = getTexts();
+                        alert(added ? t.favAdded : t.favRemoved);
+                        return;
+                    }
+                    openPanel('fav');
+                });
+
+                // 历史
+                historyBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openPanel('history');
+                });
+
+                // 设置
+                settingsToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openPanel('settings');
+                });
+
+                // 关闭面板
+                closePanelBtn.addEventListener('click', closePanel);
+
+                // 点击外部关闭面板
+                document.addEventListener('click', function(e) {
+                    if (panel.classList.contains('open')) {
+                        if (!panel.contains(e.target) &&
+                            e.target !== favBtn && e.target !== historyBtn &&
+                            e.target !== settingsToggle && !e.target.closest('.func-btn')) {
+                            closePanel();
+                        }
+                    }
+                });
+
+                // 导出
+                exportBtn.addEventListener('click', exportData);
+
+                // 导入
+                importBtn.addEventListener('click', importData);
+
+                // 主题切换
+                themeToggle.addEventListener('click', toggleTheme);
+
+                // 语言切换
+                langToggle.addEventListener('click', cycleLang);
+
+                // 语音
+                voiceBtn.addEventListener('click', toggleVoice);
+
+                // 键盘快捷键：Ctrl+Shift+L 切换语言
+                document.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+                        e.preventDefault();
+                        cycleLang();
+                    }
+                    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                        e.preventDefault();
+                        imgToggleBtn.click();
+                    }
+                    if (e.key === 'Escape') {
+                        closePanel();
+                    }
+                });
+
+                // 自动聚焦
+                input.focus();
+
+                console.log('Esra Izda 已启动！');
+            }
+
+            // 页面加载后初始化
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
 
 </body>
 </html>
